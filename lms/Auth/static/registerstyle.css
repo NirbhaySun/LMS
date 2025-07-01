@@ -1,0 +1,134 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #d7c9f9 0%, #f3eaff 100%);
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  max-width: 900px;
+  margin: 50px auto;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-height: 80vh;
+  background-color: transparent; /* show body background */
+}
+
+.left {
+  flex: 1;
+  background-color: #8f79cc; /* lighter purple */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.logo-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.5rem;
+  line-height: 1.4;
+  font-weight: 600;
+  user-select: none;
+  margin-bottom: 2rem;
+}
+
+.cta h2 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.cta button {
+  padding: 0.7rem 1.5rem;
+  background-color: #5a44a3;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cta button:hover {
+  background-color: #3e2e70;
+}
+
+.right {
+  flex: 1;
+  padding: 3rem;
+  background-color: #f0f0f0; /* lighter gray */
+  color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h2 {
+  margin-bottom: 2rem;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #2c3e50;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+input {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline-color: #3498db;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #3498db;
+}
+
+button {
+  padding: 0.75rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-weight: 600;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+.link-group {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.link-group a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.link-group a:hover {
+  text-decoration: underline;
+}

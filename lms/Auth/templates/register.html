@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Register | LibSys</title>
+  <link rel="stylesheet" href="{% static 'registerstyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <div class="logo-text">
+        LibSys:<br />A Library<br />Management System
+      </div>
+      <div class="cta">
+        <h2>Already a member?</h2>
+        <a href="{% url 'login' %}"><button>Login</button></a>
+      </div>
+    </div>
+
+    <div class="right">
+      <h2>Welcome to LibSys</h2>
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" required />
+
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required />
+
+        <label for="password1">Password</label>
+        <input type="password" name="password1" id="password1" required />
+
+        <label for="password2">Confirm Password</label>
+        <input type="password" name="password2" id="password2" required />
+
+        <button type="submit">Register</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

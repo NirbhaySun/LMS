@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="{% static 'homestyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+  <style>
+    .profile-card {
+      background: #f7faff;
+      border: 2px solid #b3d1f7;
+      border-radius: 24px;
+      box-shadow: 0 2px 12px rgba(52, 152, 255, 0.08);
+      padding: 2.5rem 2.5rem 2rem 2.5rem;
+      max-width: 370px;
+      margin: 2.5rem auto 0 auto;
+      text-align: center;
+      position: relative;
+    }
+    .profile-card .profile-pic {
+      height: 90px;
+      width: 90px;
+      border-radius: 50%;
+      margin-bottom: 1rem;
+      object-fit: cover;
+      border: 3px solid #87ceeb;
+      background: #fff;
+    }
+    .edit-profile-form label {
+      display: block;
+      margin: 1.1rem 0 0.3rem 0;
+      font-weight: 500;
+      color: #3498ff;
+      text-align: left;
+    }
+    .edit-profile-form input[type="file"],
+    .edit-profile-form input[type="date"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #b3d1f7;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-bottom: 0.7rem;
+      background: #f7faff;
+    }
+    .edit-profile-form button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.5rem;
+      background: #3498ff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .edit-profile-form button:hover {
+      background: #87ceeb;
+      color: #2d3e50;
+    }
+    .profile-card h2 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem;
+      margin-bottom: 1.2rem;
+      color: #3498ff;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="{% url 'home' %}" class="logo">LibSys</a>
+    </div>
+    <div class="nav-right">
+      <a href="{% url 'profile' %}">Profile</a>
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="profile-card">
+      <h2>Edit Profile</h2>
+      <form method="post" enctype="multipart/form-data" class="edit-profile-form">
+        {% csrf_token %}
+        {% if user.profile_pic %}
+          <img src="{{ user.profile_pic.url }}" alt="Profile Picture" class="profile-pic" />
+        {% endif %}
+        <label for="profile_pic">Profile Picture:</label>
+        <input type="file" name="profile_pic" id="profile_pic" accept="image/*">
+        <label for="userdob">Date of Birth:</label>
+        <input type="date" name="userdob" id="userdob" value="{{ user.userdob|date:'Y-m-d' }}">
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html> 

@@ -1,0 +1,96 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #87ceeb 60%, #fff 100%); /* Sky blue to white */
+  color: #2d3e50;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.nav-right a, .nav-right form button.logout-btn {
+  color: #2d3e50;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.nav-right a:hover, .nav-right form button.logout-btn:hover {
+  color: #3498ff;
+}
+
+.container {
+  max-width: 700px;
+  margin: 3rem auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 2rem 2.5rem;
+}
+
+.welcome {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.welcome h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.5rem;
+  color: #2d3e50;
+}
+
+.search-section {
+  margin-top: 2rem;
+}
+
+.search-section h2 {
+  font-size: 1.3rem;
+  color: #2d3e50;
+  margin-bottom: 1rem;
+}
+
+.search-section form {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-section input[type="text"] {
+  flex: 1;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.search-section button {
+  padding: 0.7rem 1.5rem;
+  background: #2d3e50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-section button:hover {
+  background: #ffb347;
+  color: #2d3e50;
+} 

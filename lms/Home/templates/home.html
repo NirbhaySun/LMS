@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Library Home</title>
+  <link rel="stylesheet" href="{% static 'homestyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="logo">LibSys</span>
+    </div>
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">Profile</a>
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </div>
+  </nav>
+  <div class="container">
+    <div class="welcome">
+      <h1>Welcome to LibSys</h1>
+      <p>Your one-stop solution for library management.</p>
+    </div>
+    <div class="search-section">
+      <h2>Search Books</h2>
+      <form method="GET" action="#">
+        <input type="text" name="q" placeholder="Search by title, author, or genre..." />
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <div class="latest-books">
+      <h2>Latest Books Added</h2>
+      {% if latest_books %}
+        <ul class="book-list">
+          {% for book in latest_books %}
+            <li>
+              <strong>{{ book.book_name }}</strong> by {{ book.book_author }}<br>
+              <span>Genre: {{ book.book_genre }}</span> |
+              <span>{% if book.isAvailable %}Available{% else %}Not Available{% endif %}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No books have been added yet.</p>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html> 
