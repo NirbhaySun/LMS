@@ -29,28 +29,43 @@
     <div class="welcome">
       <h1>Welcome to LibSys</h1>
       <p>Your one-stop solution for library management.</p>
-    </div>
-    <div class="search-section">
-      <h2>Search Books</h2>
-      <form method="GET" action="#">
-        <input type="text" name="q" placeholder="Search by title, author, or genre..." />
-        <button type="submit">Search</button>
-      </form>
+      <div class="search-section">
+        <h2>Search Books</h2>
+        <form method="get" action="">
+          <input type="text" name="q" placeholder="Search by title, author, or genre..." value="{{ query }}" />
+          <select name="genre">
+            <option value="">All Genres</option>
+            {% for value, label in genre_choices %}
+              <option value="{{ value }}" {% if genre == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit">Search</button>
+        </form>
+      </div>
     </div>
     <div class="latest-books">
-      <h2>Latest Books Added</h2>
-      {% if latest_books %}
+      <h2>Books</h2>
+      {% if page_obj.object_list %}
         <ul class="book-list">
-          {% for book in latest_books %}
+          {% for book in page_obj.object_list %}
             <li>
-              <strong>{{ book.book_name }}</strong> by {{ book.book_author }}<br>
+              <strong><a href="{% url 'book_detail' book.book_id %}">{{ book.book_name }}</a></strong> by {{ book.book_author }}<br>
               <span>Genre: {{ book.book_genre }}</span> |
               <span>{% if book.isAvailable %}Available{% else %}Not Available{% endif %}</span>
             </li>
           {% endfor %}
         </ul>
+        <div class="pagination" style="margin-top:1.5rem; text-align:center;">
+          {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&genre={{ genre }}&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>
+          {% endif %}
+          <span style="margin:0 1rem;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}
+            <a href="?q={{ query }}&genre={{ genre }}&page={{ page_obj.next_page_number }}">Next &raquo;</a>
+          {% endif %}
+        </div>
       {% else %}
-        <p>No books have been added yet.</p>
+        <p>No books found.</p>
       {% endif %}
     </div>
   </div>

@@ -83,7 +83,7 @@ DATABASES = {
     }
 }
 # added this code for custom user model
-AUTH_USER_MODEL = 'Auth.User'  # assuming your app is named "Auth"
+AUTH_USER_MODEL = 'Auth.User'  # I have assumed your app is named "Auth".
 
 
 

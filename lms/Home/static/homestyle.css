@@ -37,7 +37,7 @@ body {
 }
 
 .container {
-  max-width: 700px;
+  max-width: 850px;
   margin: 3rem auto;
   background: #fff;
   border-radius: 10px;
@@ -48,12 +48,29 @@ body {
 .welcome {
   text-align: center;
   margin-bottom: 2rem;
+  padding: 2.5rem 1.5rem 2.5rem 1.5rem;
+  background: #e3f2fd;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(52, 152, 255, 0.10);
+  border: 2px solid #b3d1f7;
+  max-width: 700px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 .welcome h1 {
   font-family: 'Dancing Script', cursive;
-  font-size: 2.5rem;
+  font-size: 3.2rem;
   color: #2d3e50;
+  margin-bottom: 1rem;
+}
+
+.welcome p {
+  font-size: 1.35rem;
+  color: #3498ff;
+  margin-bottom: 0;
 }
 
 .search-section {
@@ -69,10 +86,27 @@ body {
 .search-section form {
   display: flex;
   gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.2rem;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-wrap: wrap;
 }
 
 .search-section input[type="text"] {
-  flex: 1;
+  flex: 2 1 220px;
+  min-width: 180px;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.search-section select {
+  flex: 1 1 140px;
+  min-width: 120px;
   padding: 0.7rem;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -88,9 +122,23 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
+  margin-left: 0;
+  flex: 0 0 auto;
 }
 
 .search-section button:hover {
   background: #ffb347;
   color: #2d3e50;
+}
+
+@media (max-width: 800px) {
+  .welcome {
+    max-width: 98vw;
+    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+  }
+  .search-section form {
+    flex-direction: column;
+    gap: 0.7rem;
+    max-width: 100%;
+  }
 } 
