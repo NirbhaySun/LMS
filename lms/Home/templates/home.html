@@ -46,15 +46,28 @@
     <div class="latest-books">
       <h2>Books</h2>
       {% if page_obj.object_list %}
-        <ul class="book-list">
-          {% for book in page_obj.object_list %}
-            <li>
-              <strong><a href="{% url 'book_detail' book.book_id %}">{{ book.book_name }}</a></strong> by {{ book.book_author }}<br>
-              <span>Genre: {{ book.book_genre }}</span> |
-              <span>{% if book.isAvailable %}Available{% else %}Not Available{% endif %}</span>
-            </li>
-          {% endfor %}
-        </ul>
+        <table class="home-books-table">
+          <thead>
+            <tr>
+              <th>Cover</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Genre</th>
+              <th>Available</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for book in page_obj.object_list %}
+            <tr>
+              <td>{% if book.book_photo %}<img src="{{ book.book_photo.url }}" alt="{{ book.book_name }}" style="height:40px;" />{% endif %}</td>
+              <td><strong><a href="{% url 'book_detail' book.book_id %}">{{ book.book_name }}</a></strong></td>
+              <td>{{ book.book_author }}</td>
+              <td>{{ book.book_genre }}</td>
+              <td>{% if book.isAvailable %}Available{% else %}Not Available{% endif %}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
         <div class="pagination" style="margin-top:1.5rem; text-align:center;">
           {% if page_obj.has_previous %}
             <a href="?q={{ query }}&genre={{ genre }}&page={{ page_obj.previous_page_number }}">&laquo; Prev</a>

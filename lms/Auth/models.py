@@ -47,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     wishlist = models.ManyToManyField(Book, blank=True, related_name='wishlisted_by')
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_librarian = models.BooleanField(default=False)
 
     objects = UserManager()
 

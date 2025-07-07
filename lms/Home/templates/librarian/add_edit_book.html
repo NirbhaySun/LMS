@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ action }} Book</title>
+  <link rel="stylesheet" href="{% static 'homestyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="{% url 'home' %}" class="logo">LibSys</a>
+    </div>
+    <div class="nav-right">
+      <a href="{% url 'librarian_dashboard' %}">Librarian Dashboard</a>
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="librarian-form-card">
+      <h2 style="font-family: 'Dancing Script', cursive; color: #3498ff;">{{ action }} Book</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="librarian-btn">{{ action }} Book</button>
+      </form>
+      <a href="{% url 'librarian_dashboard' %}" class="librarian-btn" style="margin-top:1.2rem;">Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html> 

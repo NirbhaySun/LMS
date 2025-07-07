@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notifications</title>
+  <link rel="stylesheet" href="{% static 'homestyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="{% url 'home' %}" class="logo">LibSys</a>
+    </div>
+    <div class="nav-right">
+      <a href="{% url 'librarian_dashboard' %}">Librarian Dashboard</a>
+      <a href="{% url 'librarian_notifications' %}" class="librarian-btn" style="background:none;color:#3498ff;vertical-align:middle;">
+        <span style="font-size:1.3rem;vertical-align:middle;">&#128276;</span> Notifications
+      </a>
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="librarian-card">
+      <h2 style="font-family: 'Dancing Script', cursive; color: #3498ff;">Notifications</h2>
+      <table class="librarian-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Book</th>
+            <th>Action</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          <tr>
+            <td>{{ log.user.username }}</td>
+            <td>{{ log.book.book_name }}</td>
+            <td>{% if log.action == 'borrow' %}<span style="color:#3498ff;">Borrowed</span>{% else %}<span style="color:#e57373;">Returned</span>{% endif %}</td>
+            <td>{{ log.timestamp|date:'Y-m-d H:i' }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4">No notifications yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <a href="{% url 'librarian_dashboard' %}" class="librarian-btn" style="margin-top:1.2rem;">Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html> 

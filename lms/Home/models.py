@@ -25,3 +25,16 @@ class Book(models.Model):
 
     def __str__(self):
         return f"{self.book_name} by {self.book_author}"
+
+class BookLog(models.Model):
+    ACTION_CHOICES = [
+        ("borrow", "Borrowed"),
+        ("return", "Returned"),
+    ]
+    user = models.ForeignKey('Auth.User', on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    action = models.CharField(max_length=10, choices=ACTION_CHOICES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} {self.get_action_display()} '{self.book.book_name}' on {self.timestamp.strftime('%Y-%m-%d %H:%M')}"

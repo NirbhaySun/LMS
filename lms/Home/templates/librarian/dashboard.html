@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Librarian Dashboard</title>
+  <link rel="stylesheet" href="{% static 'homestyle.css' %}" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <a href="{% url 'home' %}" class="logo">LibSys</a>
+    </div>
+    <div class="nav-right">
+      <a href="{% url 'librarian_dashboard' %}">Librarian Dashboard</a>
+      <a href="{% url 'librarian_notifications' %}" class="librarian-btn" style="background:none;color:#3498ff;vertical-align:middle;">
+        <span style="font-size:1.3rem;vertical-align:middle;">&#128276;</span>
+      </a>
+      <form method="post" action="{% url 'logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="librarian-card">
+      <h1 style="font-family: 'Dancing Script', cursive; color: #3498ff;">Librarian Dashboard</h1>
+      <a href="{% url 'add_book' %}" class="librarian-btn" style="margin-bottom:1.5rem;display:inline-block;">+ Add New Book</a>
+      <h2 style="margin-top:2rem; color:#3498ff; font-family: 'Dancing Script', cursive;">All Books</h2>
+      <table class="librarian-table">
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Available</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+          <tr>
+            <td>{% if book.book_photo %}<img src="{{ book.book_photo.url }}" alt="{{ book.book_name }}" style="height:40px;" />{% endif %}</td>
+            <td>{{ book.book_name }}</td>
+            <td>{{ book.book_author }}</td>
+            <td>{{ book.book_genre }}</td>
+            <td>{% if book.isAvailable %}Yes{% else %}No{% endif %}</td>
+            <td>
+              <a href="{% url 'edit_book' book.book_id %}" class="librarian-btn">Edit</a>
+              <a href="{% url 'delete_book' book.book_id %}" class="librarian-btn delete">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <h2 style="margin-top:2.5rem; color:#3498ff; font-family: 'Dancing Script', cursive;">Borrowed Books</h2>
+      <table class="librarian-table">
+        <thead>
+          <tr>
+            <th>Cover</th>
+            <th>Title</th>
+            <th>Borrower</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in borrowed_books %}
+            {% for user in book.borrowed_by.all %}
+            <tr>
+              <td>{% if book.book_photo %}<img src="{{ book.book_photo.url }}" alt="{{ book.book_name }}" style="height:40px;" />{% endif %}</td>
+              <td>{{ book.book_name }}</td>
+              <td>{{ user.username }}</td>
+              <td>
+                <form method="post" action="{% url 'return_book' book.book_id user.userID %}" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="librarian-btn">Mark as Returned</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          {% empty %}
+            <tr><td colspan="4">No borrowed books.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if messages %}
+        <ul style="margin-top:1rem;">
+          {% for message in messages %}
+            <li style="color:#3498ff;">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html> 

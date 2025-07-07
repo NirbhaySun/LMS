@@ -79,23 +79,13 @@
 
       <!-- Action Buttons -->
       <div style="margin-top: 1.5rem;">
-        {% if in_my_books %}
-          <button disabled style="background:#b3d1f7; color:#555; padding:0.5rem 1.2rem; border:none; border-radius:6px;">Already in My Books</button>
-        {% elif book.isAvailable %}
-          <form method="post" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="borrow" />
-            <button type="submit" style="background:#3498ff; color:#fff; padding:0.5rem 1.2rem; border:none; border-radius:6px;">Add to My Books</button>
-          </form>
-        {% endif %}
-
         {% if in_wishlist %}
           <form method="post" style="display:inline; margin-left:0.5rem;">
             {% csrf_token %}
             <input type="hidden" name="action" value="remove_wishlist" />
             <button type="submit" style="background:#e57373; color:#fff; padding:0.5rem 1.2rem; border:none; border-radius:6px;">Remove from Wishlist</button>
           </form>
-        {% elif not in_my_books %}
+        {% else %}
           <form method="post" style="display:inline; margin-left:0.5rem;">
             {% csrf_token %}
             <input type="hidden" name="action" value="wishlist" />
