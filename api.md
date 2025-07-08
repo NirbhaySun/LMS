@@ -20,6 +20,13 @@ Base URL: /api/
   - PUT/PATCH `/api/books/{id}/`
 - **Delete a book** (librarian only)
   - DELETE `/api/books/{id}/`
+- **Upload/change book photo** (librarian only)
+  - PUT/PATCH `/api/books/{id}/photo/`
+  - Form-data: book_photo (file)
+- **Issue a book to a user** (librarian only)
+  - POST/PATCH `/api/books/{id}/issue/`
+  - Body: `{ "user_id": <user_id> }`
+  - Response: `{ "status": "Book issued to username" }`
 
 ---
 
@@ -28,6 +35,16 @@ Base URL: /api/
   - GET `/api/users/`
 - **Retrieve a user** (librarian only)
   - GET `/api/users/{id}/`
+- **Edit user profile** (self or librarian)
+  - PUT/PATCH `/api/users/{id}/profile/`
+  - Fields: username, email, userdob, profile_pic
+- **Change password** (self or librarian)
+  - POST `/api/users/{id}/change_password/`
+  - Body: `{ "password": "newpassword" }`
+- **List books borrowed by a user**
+  - GET `/api/users/{id}/borrowed/`
+- **Get a user's notifications/logs**
+  - GET `/api/users/{id}/logs/`
 
 ---
 
@@ -58,29 +75,55 @@ Base URL: /api/
   - POST `/api/librarian/return/`
   - Body: `{ "user_id": <user_id>, "book_id": <book_id> }`
   - Response: `{ "status": "username returned bookname" }`
+- **List all users with their borrowed books**
+  - GET `/api/librarian/users_borrowed/`
 
 ---
 
-## Example: Assign Book
+## Example: Issue Book via Book API
 ```
-POST /api/librarian/assign/
+POST /api/books/5/issue/
 {
-  "user_id": 2,
-  "book_id": 5
+  "user_id": 2
 }
 ```
 
-## Example: Add to Wishlist
+## Example: Edit User Profile
 ```
-POST /api/users/2/wishlist/
+PATCH /api/users/2/profile/
 {
-  "book_id": 5
+  "username": "newname",
+  "userdob": "2000-01-01"
 }
 ```
 
-## Example: Get Logs
+## Example: Upload Book Photo
 ```
-GET /api/logs/
+PATCH /api/books/5/photo/
+(form-data: book_photo=<file>)
+```
+
+## Example: Get User's Borrowed Books
+```
+GET /api/users/2/borrowed/
+```
+
+## Example: Change Password
+```
+POST /api/users/2/change_password/
+{
+  "password": "newpassword"
+}
+```
+
+## Example: Get User Logs
+```
+GET /api/users/2/logs/
+```
+
+## Example: List All Users with Borrowed Books (Librarian)
+```
+GET /api/librarian/users_borrowed/
 ```
 
 ---

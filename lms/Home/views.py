@@ -98,15 +98,37 @@ def add_book(request):
 @librarian_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
+    users = User.objects.filter(is_active=True, is_librarian=False)
+    issued_user_id = None
+    was_borrowed = not book.isAvailable
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
+        issued_user_id = request.POST.get('issue_to_user')
         if form.is_valid():
+            old_is_available = book.isAvailable
             form.save()
+            # Handle return if isAvailable was set to True
+            if not old_is_available and form.cleaned_data['isAvailable']:
+                borrowers = User.objects.filter(userbooklist=book)
+                for borrower in borrowers:
+                    borrower.userbooklist.remove(book)
+                    BookLog.objects.create(user=borrower, book=book, action='return')
+                book.isAvailable = True
+                book.save()
+            # Issue book if user selected and book is available
+            if issued_user_id and book.isAvailable:
+                user = get_object_or_404(User, pk=issued_user_id)
+                if book not in user.userbooklist.all():
+                    user.userbooklist.add(book)
+                    book.isAvailable = False
+                    book.save()
+                    BookLog.objects.create(user=user, book=book, action='borrow')
+                    messages.success(request, f'Book issued to {user.username}!')
             messages.success(request, 'Book updated successfully!')
             return redirect('librarian_dashboard')
     else:
         form = BookForm(instance=book)
-    return render(request, 'librarian/add_edit_book.html', {'form': form, 'action': 'Edit'})
+    return render(request, 'librarian/add_edit_book.html', {'form': form, 'action': 'Edit', 'users': users, 'book': book})
 
 @librarian_required
 def delete_book(request, book_id):

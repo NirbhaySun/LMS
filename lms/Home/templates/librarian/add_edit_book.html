@@ -26,6 +26,15 @@
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
+        {% if action == 'Edit' and book.isAvailable %}
+          <label for="issue_to_user">Issue to User:</label>
+          <select name="issue_to_user" id="issue_to_user">
+            <option value="">-- Select User --</option>
+            {% for user in users %}
+              <option value="{{ user.pk }}">{{ user.username }}</option>
+            {% endfor %}
+          </select>
+        {% endif %}
         <button type="submit" class="librarian-btn">{{ action }} Book</button>
       </form>
       <a href="{% url 'librarian_dashboard' %}" class="librarian-btn" style="margin-top:1.2rem;">Back to Dashboard</a>
