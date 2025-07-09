@@ -6,6 +6,8 @@ class Book(models.Model):
     """
     Model representing a book in the library.
     """
+    
+    "these ar efew genres that can be selected to label a book added in library"
     GENRE_CHOICES = [
         ("Fiction", "Fiction (Novels, stories, drama, literary fiction)"),
         ("Non-Fiction", "Non-Fiction (Essays, journalism, real-life topics, how-to books)"),
@@ -18,8 +20,8 @@ class Book(models.Model):
     book_id = models.AutoField(primary_key=True)
     book_name = models.CharField(max_length=255)
     book_author = models.CharField(max_length=255)
-    book_genre = models.CharField(max_length=40, choices=GENRE_CHOICES)
-    isAvailable = models.BooleanField(default=True)
+    book_genre = models.CharField(max_length=40, choices=GENRE_CHOICES) #can select from the genres that have been listed
+    isAvailable = models.BooleanField(default=True) #show if availble or not
     created_at = models.DateTimeField(auto_now_add=True)  # For latest books
     book_photo = models.ImageField(upload_to='book_photos/', null=True, blank=True)
 

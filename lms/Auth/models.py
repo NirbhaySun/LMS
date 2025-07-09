@@ -49,7 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_librarian = models.BooleanField(default=False)
 
-    objects = UserManager()
+    objects = UserManager() #set default manager to custom user model
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
@@ -57,7 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-    @property
+    @property  #used decorator  for using the function as an attribute user.is_staff
     def is_staff(self):
         return self.is_admin
 
@@ -65,10 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def is_superuser(self):
         return self.is_admin
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self, perm, obj=None): #it needs parameter perm so couldnt make it decorator ; to check user has perms
         return self.is_admin
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self, app_label): #to check user has any perms in  app
         return self.is_admin
 
     @property

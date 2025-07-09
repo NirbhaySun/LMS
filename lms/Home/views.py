@@ -16,23 +16,28 @@ def home(request):
     Render the main home page of the library system. Only accessible to logged-in users.
     Shows the latest books added.
     """
-    query = request.GET.get('q', '').strip()
+    query = request.GET.get('q', '').strip() #
     genre = request.GET.get('genre', '')
-    books = Book.objects.all().order_by('-created_at')
+    books = Book.objects.all().order_by('-created_at') #shows all book at order of recently added
 
-    if query:
-        books = books.filter(
-            models.Q(book_name__icontains=query) |
+#filtering process
+    if query:    #filters according to query
+        books = books.filter(  
+            models.Q(book_name__icontains=query) |  #contains this text case insensitively
             models.Q(book_author__icontains=query) |
             models.Q(book_genre__icontains=query)
-        )
+        )  
+        #filter book by genre
     if genre:
         books = books.filter(book_genre=genre)
-
+        
+#pagination
     paginator = Paginator(books, 5)  # 5 books per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    
 
+#only for the filtered books
     return render(request, 'home.html', {
         'page_obj': page_obj,
         'query': query,
@@ -44,18 +49,18 @@ def home(request):
 def book_detail(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     user = request.user
-    in_my_books = book in user.userbooklist.all()
-    in_wishlist = book in user.wishlist.all()
-    is_borrowed = not book.isAvailable
-    is_borrowed_by_user = in_my_books
+    in_my_books = book in user.userbooklist.all()#check book in userlist
+    in_wishlist = book in user.wishlist.all()#check book in use wishlist
+    is_borrowed = not book.isAvailable # check if book available or not
+    is_borrowed_by_user = in_my_books #show book borrowed
 
     if request.method == 'POST':
         action = request.POST.get('action')
-        if action == 'wishlist' and not in_wishlist:
+        if action == 'wishlist' and not in_wishlist: #if you want to wishlist
             user.wishlist.add(book)
             messages.success(request, 'Book added to your wishlist!')
             return redirect('book_detail', book_id=book.book_id)
-        elif action == 'remove_wishlist' and in_wishlist:
+        elif action == 'remove_wishlist' and in_wishlist:# if you want to remove from wishlist
             user.wishlist.remove(book)
             messages.success(request, 'Book removed from your wishlist.')
             return redirect('book_detail', book_id=book.book_id)
@@ -73,7 +78,7 @@ def book_detail(request, book_id):
         'is_borrowed': is_borrowed,
         'is_borrowed_by_user': is_borrowed_by_user,
     })
-
+#librarian dashboard
 @librarian_required
 def librarian_dashboard(request):
     books = Book.objects.all().order_by('-created_at')
@@ -82,8 +87,9 @@ def librarian_dashboard(request):
         'books': books,
         'borrowed_books': borrowed_books,
     })
-
-@librarian_required
+ 
+ #librarian add book
+@librarian_required  
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
@@ -95,17 +101,18 @@ def add_book(request):
         form = BookForm()
     return render(request, 'librarian/add_edit_book.html', {'form': form, 'action': 'Add'})
 
+#Librarian Edit
 @librarian_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     users = User.objects.filter(is_active=True, is_librarian=False)
     issued_user_id = None
-    was_borrowed = not book.isAvailable
+    was_borrowed = not book.isAvailable #book borrowed =false mean book available true
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
         issued_user_id = request.POST.get('issue_to_user')
         if form.is_valid():
-            old_is_available = book.isAvailable
+            old_is_available = book.isAvailable #to check status of availability
             form.save()
             # Handle return if isAvailable was set to True
             if not old_is_available and form.cleaned_data['isAvailable']:
@@ -117,18 +124,24 @@ def edit_book(request, book_id):
                 book.save()
             # Issue book if user selected and book is available
             if issued_user_id and book.isAvailable:
+                # Remove book from all users first (shouldn't be needed, but for safety)
+                borrowers = User.objects.filter(userbooklist=book)
+                for borrower in borrowers:
+                    borrower.userbooklist.remove(book)
+                    BookLog.objects.create(user=borrower, book=book, action='return')
                 user = get_object_or_404(User, pk=issued_user_id)
-                if book not in user.userbooklist.all():
-                    user.userbooklist.add(book)
-                    book.isAvailable = False
-                    book.save()
-                    BookLog.objects.create(user=user, book=book, action='borrow')
-                    messages.success(request, f'Book issued to {user.username}!')
+                user.userbooklist.add(book)
+                book.isAvailable = False
+                book.save()
+                BookLog.objects.create(user=user, book=book, action='borrow')
+                messages.success(request, f'Book issued to {user.username}!')
             messages.success(request, 'Book updated successfully!')
             return redirect('librarian_dashboard')
     else:
         form = BookForm(instance=book)
     return render(request, 'librarian/add_edit_book.html', {'form': form, 'action': 'Edit', 'users': users, 'book': book})
+
+#deletion of book
 
 @librarian_required
 def delete_book(request, book_id):
@@ -163,11 +176,15 @@ def assign_book(request, book_id):
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
         user = get_object_or_404(User, pk=user_id)
-        if book.isAvailable and book not in user.userbooklist.all():
+        if book.isAvailable:
+            # Remove book from all users first (shouldn't be needed, but for safety)
+            borrowers = User.objects.filter(userbooklist=book)
+            for borrower in borrowers:
+                borrower.userbooklist.remove(book)
+                BookLog.objects.create(user=borrower, book=book, action='return')
             user.userbooklist.add(book)
             book.isAvailable = False
             book.save()
-            # Log as 'user borrowed book' for notifications
             BookLog.objects.create(user=user, book=book, action='borrow')
             messages.success(request, f"{user.username} borrowed {book.book_name}.")
             return redirect('librarian_dashboard')
